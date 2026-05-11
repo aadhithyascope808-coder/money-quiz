@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Money Pattern Is Running Your Life? — Free Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #1A1510;
+    --cream:  #FAF6EE;
+    --warm:   #F0E8D5;
+    --gold:   #C9953A;
+    --glt:    #E8B86D;
+    --rust:   #B85C2A;
+    --sage:   #5A8A5A;
+    --lav:    #7B6FA0;
+    --muted:  #8A7A6A;
+    --border: #DDD0BB;
+    --dark:   #181210;
+    --card:   #2A2018;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── COVER SCREEN ── */
+  #cover {
+    min-height: 100vh;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  #cover::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 60px solid #231C14;
+    top: -120px; right: -120px;
+    pointer-events: none;
+  }
+  #cover::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid #2E2820;
+    bottom: 60px; left: -80px;
+    pointer-events: none;
+  }
+
+  .cover-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s ease forwards;
+  }
+
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.0;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s ease forwards;
+  }
+  .cover-title span { color: var(--gold); font-style: italic; }
+
+  .cover-sub {
+    font-size: 16px;
+    color: #A09080;
+    max-width: 480px;
+    line-height: 1.7;
+    margin: 20px auto 36px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.6s ease forwards;
+  }
+
+  .cover-stats {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.8s ease forwards;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--gold);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #605040;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .btn-start {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 18px 48px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    opacity: 0;
+    animation: fadeUp 0.6s 1s ease forwards;
+  }
+  .btn-start:hover { background: var(--glt); transform: translateY(-2px); }
+
+  .cover-note {
+    font-size: 12px;
+    color: #4A3A2A;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeUp 0.6s 1.2s ease forwards;
+  }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz {
+    display: none;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .quiz-header {
+    background: var(--dark);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .quiz-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--gold);
+    font-style: italic;
+  }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-bar {
+    width: 140px;
+    height: 4px;
+    background: #2E2820;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+  .progress-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #605040;
+    letter-spacing: 1px;
+    min-width: 40px;
+  }
+
+  .question-wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  .q-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 36px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    padding: 18px 22px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.5;
+    transition: all 0.15s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .option::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: background 0.15s;
+  }
+  .option:hover {
+    border-color: var(--gold);
+    background: var(--warm);
+    transform: translateX(3px);
+  }
+  .option:hover::before { background: var(--gold); }
+  .option.selected {
+    border-color: var(--gold);
+    background: var(--warm);
+    font-weight: 600;
+  }
+  .option.selected::before { background: var(--gold); }
+
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-back {
+    background: none;
+    border: 1.5px solid var(--border);
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-back:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-next {
+    background: var(--ink);
+    border: none;
+    padding: 14px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .btn-next.active { opacity: 1; pointer-events: all; }
+  .btn-next.active:hover { background: var(--card); }
+
+  /* ── EMAIL GATE ── */
+  #email-gate {
+    display: none;
+    min-height: 100vh;
+    background: var(--dark);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  .gate-inner {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+  }
+  .gate-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .gate-title span { color: var(--gold); font-style: italic; }
+  .gate-sub {
+    font-size: 15px;
+    color: #A09080;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .email-form { display: flex; flex-direction: column; gap: 12px; }
+  .email-form input {
+    background: #231C14;
+    border: 1.5px solid #3A2E1E;
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .email-form input::placeholder { color: #605040; }
+  .email-form input:focus { border-color: var(--gold); }
+  .btn-reveal {
+    background: var(--gold);
+    border: none;
+    padding: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-reveal:hover { background: var(--glt); }
+  .gate-privacy {
+    font-size: 11px;
+    color: #4A3A2A;
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* ── RESULT SCREEN ── */
+  #result {
+    display: none;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .result-hero {
+    background: var(--dark);
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,149,58,0.12) 0%, transparent 60%);
+  }
+  .result-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .result-pattern-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .result-pattern-name span { color: var(--gold); }
+  .result-tagline {
+    font-size: 16px;
+    color: #A09080;
+    max-width: 500px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .result-body {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  .result-section {
+    margin-bottom: 32px;
+  }
+  .result-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-section p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  .signs-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .signs-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .signs-list li::before {
+    content: '■';
+    color: var(--gold);
+    font-size: 8px;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .rewire-box {
+    background: var(--dark);
+    padding: 28px 32px;
+    margin: 32px 0;
+    border-left: 4px solid var(--gold);
+  }
+  .rewire-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .rewire-box p {
+    font-size: 15px;
+    color: #D0C8B8;
+    line-height: 1.7;
+  }
+
+  .cta-block {
+    background: var(--ink);
+    padding: 40px 32px;
+    text-align: center;
+    margin-top: 40px;
+  }
+  .cta-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .cta-sub {
+    font-size: 14px;
+    color: #A09080;
+    margin-bottom: 24px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+  .btn-cta {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+  }
+  .btn-cta:hover { background: var(--glt); }
+  .btn-cta-sub {
+    display: block;
+    font-size: 11px;
+    color: #4A3A2A;
+    margin-top: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* share buttons */
+  .share-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .btn-share {
+    background: none;
+    border: 1.5px solid #3A2E1E;
+    padding: 10px 22px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #A09080;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .btn-share:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* secondary patterns */
+  .other-patterns {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+  .other-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .pattern-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pill {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .cover-stats { gap: 20px; }
+    .q-text { font-size: 20px; }
+    .result-pattern-name { font-size: 30px; }
+  }
+
+  /* Print / PDF styles */
+  @media print {
+    #cover, #quiz, #email-gate { display: none !important; }
+    #result { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     SCREEN 1: COVER
+═══════════════════════════════════════════════════ -->
+<div id="cover">
+  <div class="cover-tag">Free Guide — The Rewired Mind</div>
+  <h1 class="cover-title">Which Money Pattern<br>is <span>Running Your Life?</span></h1>
+  <p class="cover-sub">Answer 7 honest questions. We'll identify the exact psychological pattern that's keeping you financially stuck — and give you the first step to interrupt it.</p>
+
+  <div class="cover-stats">
+    <div class="stat-item">
+      <div class="stat-num">7</div>
+      <div class="stat-lbl">Questions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2</div>
+      <div class="stat-lbl">Minutes</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">7</div>
+      <div class="stat-lbl">Patterns</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">1</div>
+      <div class="stat-lbl">Rewire Trigger</div>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">Find My Pattern →</button>
+  <div class="cover-note">Free · No credit card · Takes 2 minutes</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SCREEN 2: QUIZ
+═══════════════════════════════════════════════════ -->
+<div id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-logo">The Rewired Mind</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text">1 / 7</div>
+    </div>
+  </div>
+  <div class="question-wrap">
+    <div class="q-number" id="q-number">QUESTION 1 OF 7</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="q-nav">
+      <button class="btn-back" id="btn-back" onclick="goBack()">← Back</button>
+      <button class="btn-next" id="btn-next" onclick="goNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SCREEN 3: EMAIL GATE
+═══════════════════════════════════════════════════ -->
+<div id="email-gate" style="display:none; min-height:100vh; background:var(--dark); display:none; align-items:center; justify-content:center; padding:40px 24px;">
+  <div class="gate-inner">
+    <div class="result-label" style="margin-bottom:16px;">Your result is ready</div>
+    <h2 class="gate-title">We've identified<br><span>your dominant pattern.</span></h2>
+    <p class="gate-sub">Enter your email to reveal your pattern, get your personalised Rewire Trigger, and receive the free 1-page guide — straight to your inbox.</p>
+    <div class="email-form">
+      <input type="text" id="name-input" placeholder="Your first name" />
+      <input type="email" id="email-input" placeholder="Your email address" />
+      <button class="btn-reveal" onclick="revealResult()">Reveal My Pattern →</button>
+    </div>
+    <p class="gate-privacy">No spam. Unsubscribe any time. Your results are saved.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SCREEN 4: RESULT
+═══════════════════════════════════════════════════ -->
+<div id="result">
+  <div class="result-hero">
+    <div class="result-label">Your Dominant Money Pattern</div>
+    <h2 class="result-pattern-name" id="r-name"></h2>
+    <p class="result-tagline" id="r-tagline"></p>
+  </div>
+
+  <div class="result-body">
+    <div class="result-section">
+      <div class="result-section-label">What This Means</div>
+      <p id="r-meaning"></p>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">Signs This Pattern Is Running Your Life</div>
+      <ul class="signs-list" id="r-signs"></ul>
+    </div>
+
+    <div class="rewire-box">
+      <div class="rewire-box-label">Your First Rewire Trigger</div>
+      <p id="r-trigger"></p>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-label">Ready to go deeper?</div>
+      <div class="cta-title">Get the full 21-day<br>Rewire System</div>
+      <p class="cta-sub">The Rewired Mind workbook decodes all 7 patterns, gives you a 21-day daily journal, and a step-by-step system to interrupt and replace each one.</p>
+      <a class="btn-cta" href="#">Get The Rewired Mind — $27 →</a>
+      <span class="btn-cta-sub">PDF + Notion Template · Instant Download</span>
+
+      <div class="share-row">
+        <button class="btn-share" onclick="shareResult()">Share My Result</button>
+        <button class="btn-share" onclick="retakeQuiz()">Retake Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="other-patterns">
+    <div class="other-title">The Other 6 Patterns</div>
+    <div class="pattern-pills" id="other-pills"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const PATTERNS = {
+  scarcity: {
+    name: 'The Scarcity Script',
+    color: '#C9953A',
+    tagline: '"You inherited a story about money. It was never yours to keep."',
+    meaning: 'The Scarcity Script was installed before you were old enough to question it. When your environment repeated "money is tight" or "we can\'t afford that," your brain filed it as permanent fact — not someone else\'s opinion. This pattern makes small financial numbers feel threatening, avoidance feel safe, and action feel pointless.',
+    signs: [
+      'You feel physical dread or anxiety when checking your bank balance',
+      'You avoid financial conversations and use humour to deflect them',
+      'You say "I can\'t afford it" even when you technically can',
+      'Saving feels pointless — "something always comes up"',
+      'You panic-spend when money arrives, as if it might disappear',
+    ],
+    trigger: 'Write three things you said "I can\'t afford" this week. For each one ask: "Is this actually true right now — or is this the Script speaking?" The distinction between real scarcity and inherited scarcity is where the rewire begins. Most of what we call "can\'t afford" we could afford. We just feel we can\'t.',
+  },
+  ceiling: {
+    name: 'The Deserving Ceiling',
+    color: '#B85C2A',
+    tagline: '"There is an invisible income cap on your life. You built it without knowing."',
+    meaning: 'Every time you approach a new financial level, something pulls you back. A bad decision. An impulse spend. An "unlucky" moment. This is not bad luck — it is your subconscious restoring you to the financial level you believe you deserve. The ceiling feels like caution or humility. It is neither.',
+    signs: [
+      'Every time you near a new income milestone, something goes wrong',
+      'You undercharge for your work or feel guilty asking for more',
+      'You spend windfalls quickly — holding that money feels wrong',
+      'You dismiss your own financial successes as luck',
+      'You secretly believe wealthy people have something you fundamentally lack',
+    ],
+    trigger: 'Name your current income level clearly. Now name the income where you would feel like a "different kind of person." The discomfort you feel at that second number is the ceiling. Write it down. Name it. A named ceiling is a ceiling you can begin to raise.',
+  },
+  identity: {
+    name: 'The Identity Anchor',
+    color: '#5A8A5A',
+    tagline: '"I\'m bad with money." Five words. Enormous financial cost."',
+    meaning: 'You have told yourself — and others — that you are "not a money person" so many times that your brain accepted it as biological fact. It is not fact. It is a habit of description. And every time you try to behave differently, it feels like a performance. The brain resolves the dissonance by abandoning the new behaviour — not the old identity.',
+    signs: [
+      '"I\'m bad with money" used as a complete explanation, not a problem to solve',
+      'Financial literacy feels like it\'s for "other types of people"',
+      'You outsource all financial decisions out of a sense of inadequacy',
+      'Spreadsheets and numbers feel emotionally threatening',
+      'Your own financial wins get attributed to luck, not skill',
+    ],
+    trigger: 'Replace "I am bad with money" with "I am someone who is learning to understand money." Write that sentence every day for 7 days. It is not an affirmation — it is identity architecture. The shift from fixed identity to learning identity is where the anchor begins to lift.',
+  },
+  safety: {
+    name: 'The Safety Spend',
+    color: '#7B6FA0',
+    tagline: '"You don\'t spend money to buy things. You spend it to feel safe for 15 minutes."',
+    meaning: 'Purchasing activates dopamine temporarily — reducing the stress hormone cortisol. Your brain learned this association fast and now triggers spending whenever stress rises. The relief is real. The regret arrives within hours. Then comes more stress. Then more spending. This is a neurological loop, not a character flaw — which means it responds to interruption.',
+    signs: [
+      'You shop online when stressed, anxious, or overwhelmed',
+      'A brief real relief happens during and just after purchasing',
+      'Guilt arrives within hours — creating more stress — restarting the loop',
+      'You buy things you barely use',
+      'You rationalise with "I deserved it" after a hard week',
+    ],
+    trigger: 'Create a 15-minute rule. When the urge to buy something unplanned arrives: set a timer. Move physically — walk, drink water, stretch. In most cases the cortisol spike passes and the urge drops significantly. This interrupts the loop before it completes.',
+  },
+  comparison: {
+    name: 'The Comparison Drain',
+    color: '#C9953A',
+    tagline: '"You are funding a lifestyle built for someone else\'s opinion."',
+    meaning: 'Social media has expanded the comparison pool to millions — nearly all showing curated highlight reels. Research consistently links passive social media use to increased unplanned spending in the hours that follow. You are not buying products. You are buying the feeling of being on the same level. That feeling has a very short half-life.',
+    signs: [
+      'Financial dissatisfaction increases primarily after scrolling social media',
+      'You buy things because others in your circle have them',
+      'You spend more when you know others will see it',
+      'Your spending increases around social events or Instagram browsing',
+      'You feel temporary shame about your lifestyle by comparison',
+    ],
+    trigger: 'Before any discretionary purchase ask one question: "Would I still want this if no one could ever know I had it?" If the honest answer is no — the purchase is comparison, not desire. This single filter eliminates a significant portion of comparison spending within two weeks.',
+  },
+  postponed: {
+    name: 'The Postponed Life',
+    color: '#B85C2A',
+    tagline: '"The word \'when\' is costing you more than any purchase you\'ve ever made."',
+    meaning: 'The brain heavily favours immediate relief over delayed gain. "I\'ll start saving when I earn more" feels completely rational — while being mathematically catastrophic over time. The "when" condition feels like responsible preparation. In reality it is an open-ended permission to never start. And "not yet" has no deadline.',
+    signs: [
+      '"I\'ll start investing when I have more to invest"',
+      '"I\'ll save properly when I earn more"',
+      '"I\'ll sort this out after this busy period"',
+      'The same financial intention has been waiting over a year',
+      'You over-research and plan instead of beginning',
+    ],
+    trigger: 'Choose the financial action you have postponed longest. Make it embarrassingly small — under 5 minutes. Do it today regardless of conditions. A $5 transfer is not about $5. It is about proving to your brain that beginning is possible before the conditions are perfect.',
+  },
+  knowledge: {
+    name: 'The Knowledge Trap',
+    color: '#5A8A5A',
+    tagline: '"You are not uninformed. You are using information as a hiding place."',
+    meaning: 'The act of learning about a goal triggers mild dopamine — similar to achieving it. This creates a loop where consuming financial content feels almost as satisfying as acting on it, with none of the risk. The Knowledge Trap looks exactly like the right thing to do. It feels responsible. Others praise it. Meanwhile nothing in your bank account changes.',
+    signs: [
+      'Multiple personal finance podcasts consumed — nothing has changed',
+      'You can explain compound interest perfectly but have no investment account',
+      'Books are added to the list faster than they are read',
+      'You feel informed and yet completely stuck',
+      'Content consumption increases when financial anxiety increases',
+    ],
+    trigger: 'For the next 7 days: zero new financial content. Instead, one action daily based only on what you already know. You already know enough to begin. The next piece of information you need will only reveal itself once you start moving. Motion creates clarity. More information does not.',
+  },
+};
+
+const QUESTIONS = [
+  {
+    text: "After a stressful day at work, you're most likely to:",
+    options: [
+      { text: "Open a shopping app or browse online without a specific item in mind", pattern: "safety" },
+      { text: "Avoid checking your bank balance or any financial app entirely", pattern: "scarcity" },
+      { text: "Tell yourself you'll deal with money stuff \"when things calm down\"", pattern: "postponed" },
+      { text: "Scroll social media and notice a vague dissatisfaction with what you have", pattern: "comparison" },
+    ]
+  },
+  {
+    text: "When you receive unexpected money — a bonus, gift, or refund — you typically:",
+    options: [
+      { text: "Spend most of it within days, as if it needs to move quickly", pattern: "ceiling" },
+      { text: "Feel brief relief, then anxiety about it \"running out\" soon", pattern: "scarcity" },
+      { text: "Feel a sudden urge to upgrade something you've been comparing against others", pattern: "comparison" },
+      { text: "Set it aside, knowing you'll figure out what to do with it \"later\"", pattern: "postponed" },
+    ]
+  },
+  {
+    text: "You've heard a great money tip that could genuinely help you. You most likely:",
+    options: [
+      { text: "Save it to a list and research 5 more similar tips before acting on any", pattern: "knowledge" },
+      { text: "Think \"that's for people who already have money to work with\"", pattern: "scarcity" },
+      { text: "Dismiss it quietly — financial stuff just isn't really \"your thing\"", pattern: "identity" },
+      { text: "Plan to implement it when your situation is more stable", pattern: "postponed" },
+    ]
+  },
+  {
+    text: "When you think about what you charge for your work or ask for in salary negotiations:",
+    options: [
+      { text: "You typically ask for less than you know you should — it feels uncomfortable", pattern: "ceiling" },
+      { text: "You avoid the conversation entirely or let others set the number", pattern: "identity" },
+      { text: "You're fine asking, but always spend the gains quickly after receiving them", pattern: "ceiling" },
+      { text: "You compare your rate to others and feel either behind or vaguely unworthy", pattern: "comparison" },
+    ]
+  },
+  {
+    text: "How do you most often feel when you open your banking app?",
+    options: [
+      { text: "Anxious — you sometimes avoid opening it for days", pattern: "scarcity" },
+      { text: "Fine — but you've been meaning to actually set up a proper savings plan for a while", pattern: "postponed" },
+      { text: "Neutral — but you're not sure you'd know what to do with what you see there", pattern: "identity" },
+      { text: "Vaguely unsatisfied — it never quite feels like \"enough\"", pattern: "ceiling" },
+    ]
+  },
+  {
+    text: "When you buy something impulsively and regret it afterwards, the trigger was usually:",
+    options: [
+      { text: "Stress, anxiety, a difficult moment — the purchase felt like relief", pattern: "safety" },
+      { text: "Seeing someone else have it — online or in person", pattern: "comparison" },
+      { text: "A sense of \"I work hard, I deserve this\"", pattern: "safety" },
+      { text: "Not really impulse — I don't spend impulsively, I just delay starting to save", pattern: "postponed" },
+    ]
+  },
+  {
+    text: "If someone asked you \"are you good with money?\" your most honest answer would be:",
+    options: [
+      { text: "\"No — I've never really been a money person\" (and you say it quickly)", pattern: "identity" },
+      { text: "\"I know what to do, I just haven't actually started properly yet\"", pattern: "knowledge" },
+      { text: "\"I earn fine, I just don't know where it goes\" (and you don't check)", pattern: "scarcity" },
+      { text: "\"Getting better — but something always seems to pull me back when I get ahead\"", pattern: "ceiling" },
+    ]
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+let current = 0;
+let answers = [];
+let selected = null;
+
+function startQuiz() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  document.getElementById('q-number').textContent = `QUESTION ${current + 1} OF ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-text').textContent = `${current + 1} / ${QUESTIONS.length}`;
+  document.getElementById('progress-fill').style.width = `${((current) / QUESTIONS.length) * 100}%`;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[current] === i ? ' selected' : '');
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(i);
+    opts.appendChild(btn);
+  });
+
+  selected = answers[current] !== undefined ? answers[current] : null;
+  updateNextBtn();
+
+  document.getElementById('btn-back').style.visibility = current === 0 ? 'hidden' : 'visible';
+}
+
+function selectOption(i) {
+  selected = i;
+  answers[current] = i;
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+  });
+  updateNextBtn();
+  // Auto-advance after short delay
+  setTimeout(() => {
+    if (current < QUESTIONS.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      showEmailGate();
+    }
+  }, 350);
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btn-next');
+  btn.classList.toggle('active', selected !== null);
+}
+
+function goNext() {
+  if (selected === null) return;
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showEmailGate();
+  }
+}
+
+function goBack() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function showEmailGate() {
+  document.getElementById('quiz').style.display = 'none';
+  const gate = document.getElementById('email-gate');
+  gate.style.display = 'flex';
+}
+
+function revealResult() {
+  const name = document.getElementById('name-input').value.trim() || 'there';
+  document.getElementById('email-gate').style.display = 'none';
+  showResult(name);
+}
+
+function showResult(name) {
+  // Tally scores
+  const scores = {};
+  answers.forEach((ans, qi) => {
+    if (ans !== undefined) {
+      const p = QUESTIONS[qi].options[ans].pattern;
+      scores[p] = (scores[p] || 0) + 1;
+    }
+  });
+
+  // Find dominant pattern
+  let dominant = 'scarcity';
+  let max = 0;
+  Object.entries(scores).forEach(([p, s]) => { if (s > max) { max = s; dominant = p; } });
+
+  const pd = PATTERNS[dominant];
+
+  document.getElementById('r-name').innerHTML = `<span>${pd.name}</span>`;
+  document.getElementById('r-tagline').textContent = pd.tagline;
+  document.getElementById('r-meaning').textContent = pd.meaning;
+
+  const signsList = document.getElementById('r-signs');
+  signsList.innerHTML = pd.signs.map(s => `<li>${s}</li>`).join('');
+
+  document.getElementById('r-trigger').textContent = pd.trigger;
+
+  // Other patterns
+  const pills = document.getElementById('other-pills');
+  pills.innerHTML = Object.entries(PATTERNS)
+    .filter(([k]) => k !== dominant)
+    .map(([k, v]) => `<span class="pill">${v.name}</span>`)
+    .join('');
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+
+function retakeQuiz() {
+  current = 0; answers = []; selected = null;
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('cover').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+function shareResult() {
+  const name = document.getElementById('r-name').textContent;
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Money Pattern — The Rewired Mind',
+      text: `I just discovered my dominant money pattern is "${name}". Take the free quiz to find yours:`,
+      url: window.location.href,
+    });
+  } else {
+    navigator.clipboard?.writeText(window.location.href);
+    alert('Link copied! Share it with someone who needs this.');
+  }
+}
+</script>
+</body>
+</html>
